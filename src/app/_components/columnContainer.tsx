@@ -83,10 +83,9 @@ export function ColumnContainer({
           <DeleteButton onDelete={() => deleteColumn(column.id)} />
         </div>
         <div className="flex flex-col gap-6 max-w-full">
-          {!isDropped &&
-            filteredTasks?.map((task, index) => {
-              return <TaskCard key={task.id} task={task} deleteTask={deleteTask} index={index} />;
-            })}
+          {filteredTasks?.map((task, index) => {
+            return <TaskCard key={task.id} task={task} deleteTask={deleteTask} index={index} column={column} />;
+          })}
         </div>
       </div>
 

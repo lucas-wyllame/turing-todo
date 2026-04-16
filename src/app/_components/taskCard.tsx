@@ -1,7 +1,6 @@
 "use client";
 
-import { Id, Task } from "@/types";
-import { useDraggable } from "@dnd-kit/react";
+import { Column, Id, Task } from "@/types";
 import { ClockIcon, TrashIcon } from "@phosphor-icons/react";
 import DialogCreateTaskCard from "./dialogCreateTask";
 import { DeleteButton } from "./DeleteButton";
@@ -12,10 +11,11 @@ import { useSortable } from "@dnd-kit/react/sortable";
 type TaskCardProps = {
   task: Task;
   deleteTask: (id: Id) => void;
+  index: number;
+  column: Column;
 };
 
-export function TaskCard({ task, deleteTask }: TaskCardProps) {
-  const { ref } = useDraggable({ id: "draggable" });
+export function TaskCard({ task, deleteTask, index, column }: TaskCardProps) {
   const [editMode, setEditMode] = useState(false);
   const { tasks, setTasks } = useTasksContext();
   const [mouseIsOver, setMouseIsOver] = useState(false);
@@ -26,15 +26,15 @@ export function TaskCard({ task, deleteTask }: TaskCardProps) {
     BAIXA: "priority-bgGreen",
   };
 
-  // const sortable = useSortable({
-  //   id: task.id,
-  //   index,
-  //   data: {
-  //     type: "column",
-  //     column,
-  //   },
-  //   disabled: columnsLength === 1,
-  // });
+  const sortable = useSortable({
+    id: task.id,
+    index,
+    data: {
+      type: "task",
+      task,
+    },
+    group: column.id,
+  });
 
   const updateTaskContent = (id: Id, title?: string, description?: string) => {
     const newTasks = tasks.map((task) => {
@@ -51,6 +51,7 @@ export function TaskCard({ task, deleteTask }: TaskCardProps) {
       onMouseEnter={() => setMouseIsOver(true)}
       onMouseLeave={() => setMouseIsOver(false)}
       className="bg-card-bg p-4 rounded-lg w-full"
+      ref={sortable.ref}
     >
       {editMode ? (
         <input

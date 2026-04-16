@@ -5,11 +5,15 @@ import { PlusCircleIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { ColumnContainer } from "./columnContainer";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
+import { useTasksContext } from "@/context/tasksContext";
+import { isSortable } from "@dnd-kit/react/sortable";
 
 export function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [isDropped, setIsDropped] = useState(false);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
+  const [activeTask, setActiveTask] = useState<Task | null>(null);
+  const { tasks, setTasks } = useTasksContext();
 
   function createNewColumn() {
     const newColumn: Column = {

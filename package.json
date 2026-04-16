@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@dnd-kit/react": "^0.3.2",
+    "@dnd-kit/utilities": "^3.2.2",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
