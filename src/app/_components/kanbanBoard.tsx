@@ -7,13 +7,18 @@ import { ColumnContainer } from "./columnContainer";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 import { useTasksContext } from "@/context/tasksContext";
 import { isSortable } from "@dnd-kit/react/sortable";
+import { DragOperation, Data } from "@dnd-kit/abstract";
+import { Draggable, Droppable } from "@dnd-kit/dom";
+import { TaskCard } from "./taskCard";
+import { defaultColumns } from "@/exampleCards";
 
 export function KanbanBoard() {
-  const [columns, setColumns] = useState<Column[]>([]);
+  const [columns, setColumns] = useState<Column[]>(defaultColumns);
   const [isDropped, setIsDropped] = useState(false);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const { tasks, setTasks } = useTasksContext();
+  const [columnOrder, setColumnOrder] = useState(() => Object.keys(tasks));
 
   function createNewColumn() {
     const newColumn: Column = {
@@ -42,6 +47,36 @@ export function KanbanBoard() {
 
   console.log(columns);
 
+  function moveTask(sourceId: Id, targetId: Id) {
+    setTasks((prev) => {
+      const sourceIndex = prev.findIndex((task) => task.id === sourceId);
+      const targetIndex = prev.findIndex((task) => task.id === targetId);
+
+      if (sourceIndex === -1 || targetIndex === -1) return prev;
+
+      const sourceTask = prev[sourceIndex];
+      const targetTask = prev[targetIndex];
+
+      const updated = [...prev];
+
+      // muda coluna se necessário
+      updated[sourceIndex] = {
+        ...sourceTask,
+        columnId: targetTask.columnId,
+      };
+
+      // reorder
+      const [removed] = updated.splice(sourceIndex, 1);
+      updated.splice(targetIndex, 0, removed);
+
+      return updated;
+    });
+  }
+
+  function moveTaskToColumn(taskId: Id, columnId: Id) {
+    setTasks((prev) => prev.map((task) => (task.id === taskId ? { ...task, columnId } : task)));
+  }
+
   return (
     <>
       <div
@@ -62,26 +97,34 @@ export function KanbanBoard() {
 
             return;
           }
-        }}
-        onDragEnd={(event, manager) => {
-          const { operation, canceled } = event;
-          const { source, target } = operation;
-          if (canceled) {
-            console.log(`Cancelled dragging ${source?.id}`);
+          if (event.operation.source?.data.type === "task") {
+            setActiveTask(event.operation.source?.data.task);
+            console.log("activeTask", activeTask);
 
             return;
           }
+        }}
+        onDragMove={(event) => {
+          const { source, target } = event.operation;
 
-          if (target) {
-            console.log(`Dropped ${source?.id} over ${target.id}`);
-            console.log(`Source data:`, source?.data);
-            console.log(`Drop position`, operation.position.current);
+          if (!target) return;
+
+          // TASK → TASK
+          if (source?.data?.type === "task" && target?.data?.type === "task") {
+            moveTask(source.id, target.id);
+            return;
           }
 
-          setIsDropped(target?.id === "droppable");
+          // TASK → COLUMN
+          if (source?.data?.type === "task" && target?.data?.type === "column") {
+            moveTaskToColumn(source.id, target.id);
+            return;
+          }
+          setActiveTask(null);
+          setActiveColumn(null);
         }}
       >
-        <div className="m-auto flex gap-10">
+        <div className="m-auto flex gap-10 h-149.5">
           {columns.map((column, index) => {
             return (
               <ColumnContainer
@@ -104,6 +147,15 @@ export function KanbanBoard() {
                 column={activeColumn}
                 index={0}
                 columnsLength={columns.length}
+              />
+            )}
+            {activeTask && (
+              <TaskCard
+                task={activeTask}
+                deleteTask={() => {}}
+                index={0}
+                column={{ id: activeTask.columnId, title: "" }}
+                isntOverlay={false}
               />
             )}
           </DragOverlay>

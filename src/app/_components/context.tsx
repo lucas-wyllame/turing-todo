@@ -13,7 +13,7 @@ export function HomeContent() {
   return (
     <>
       <div className="flex bg-linear-to-r from-turing-purple to-turing-blue w-screen h-22 justify items-center justify-end px-10" />
-      <main className="flex flex-col gap-5 container mx-auto px-4 py-8 overflow-x-auto">
+      <main className="flex flex-col gap-5 container mx-auto px-4 py-8 overflow-x-auto overflow-y-hidden">
         <TasksContextProvider>
           <KanbanBoard />
         </TasksContextProvider>

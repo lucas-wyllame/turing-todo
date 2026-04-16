@@ -1,3 +1,4 @@
+import { defaultTasks } from "@/exampleCards";
 import { Task } from "@/types";
 import React, { PropsWithChildren, createContext, useState, useContext } from "react";
 
@@ -9,12 +10,7 @@ interface TasksContextData {
 const TasksContext = createContext({} as TasksContextData);
 
 export const TasksContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [tasks, setTasks] = useState<Task[]>([
-    // ...todoListExamples,
-    // ...toDoingListExamples,
-    // ...qAListExamples,
-    // ...doneListExamples,
-  ]);
+  const [tasks, setTasks] = useState<Task[]>(defaultTasks as Task[]);
 
   return (
     <TasksContext.Provider

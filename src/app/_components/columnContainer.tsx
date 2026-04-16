@@ -8,6 +8,7 @@ import DialogCreateTaskCard from "./dialogCreateTask";
 import { useTasksContext } from "@/context/tasksContext";
 import { DeleteButton } from "./DeleteButton";
 import { TaskCard } from "./taskCard";
+import { CollisionPriority } from "@dnd-kit/abstract";
 
 type ColumnContainerProps = {
   column: Column;
@@ -33,14 +34,24 @@ export function ColumnContainer({
   const [open, setOpen] = useState(false);
   const { tasks, setTasks } = useTasksContext();
 
-  const sortable = useSortable({
+  // const sortable = useSortable({
+  //   id: column.id,
+  //   index,
+  //   data: {
+  //     type: "column",
+  //     column,
+  //   },
+  //   disabled: columnsLength === 1,
+  // });
+
+  const droppable = useDroppable({
     id: column.id,
-    index,
+    type: "column",
     data: {
       type: "column",
-      column,
     },
-    disabled: columnsLength === 1,
+    accept: "task",
+    collisionPriority: CollisionPriority.Low,
   });
 
   const handleOpen = () => setOpen(true);
@@ -57,9 +68,9 @@ export function ColumnContainer({
 
   return (
     <div
-      ref={sortable.ref}
-      id="droppable"
-      className={`w-75 flex flex-col justify-between bg-column-bg min-h-150 rounded-lg p-4 min-w-82.5 md:min-w-112.5 ${isntOverlay && sortable.isDragging ? "opacity-50" : "opacity-100"} ${sortable.isDragging ? "dragging" : undefined}`}
+      // ref={sortable.ref}
+      ref={droppable.ref}
+      className={`w-75 flex flex-col justify-between bg-column-bg min-h-150 rounded-lg p-4 min-w-82.5 md:min-w-112.5 overflow-y-scroll`}
     >
       <div>
         <div className="flex items-center justify-between mb-6">
@@ -84,7 +95,7 @@ export function ColumnContainer({
         </div>
         <div className="flex flex-col gap-6 max-w-full">
           {filteredTasks?.map((task, index) => {
-            return <TaskCard key={task.id} task={task} deleteTask={deleteTask} index={index} column={column} />;
+            return <TaskCard key={task.id} task={task} deleteTask={deleteTask} index={index} column={column} isntOverlay />;
           })}
         </div>
       </div>

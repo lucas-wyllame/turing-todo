@@ -7,18 +7,19 @@ import { DeleteButton } from "./DeleteButton";
 import { useState } from "react";
 import { useTasksContext } from "@/context/tasksContext";
 import { useSortable } from "@dnd-kit/react/sortable";
+import { CollisionPriority } from "@dnd-kit/abstract";
 
 type TaskCardProps = {
   task: Task;
   deleteTask: (id: Id) => void;
   index: number;
   column: Column;
+  isntOverlay?: boolean;
 };
 
-export function TaskCard({ task, deleteTask, index, column }: TaskCardProps) {
+export function TaskCard({ task, deleteTask, index, column, isntOverlay = false }: TaskCardProps) {
   const [editMode, setEditMode] = useState(false);
   const { tasks, setTasks } = useTasksContext();
-  const [mouseIsOver, setMouseIsOver] = useState(false);
 
   const priorityColors = {
     ALTA: "priority-bgRed",
@@ -29,11 +30,12 @@ export function TaskCard({ task, deleteTask, index, column }: TaskCardProps) {
   const sortable = useSortable({
     id: task.id,
     index,
+    type: "task",
     data: {
       type: "task",
       task,
     },
-    group: column.id,
+    collisionPriority: CollisionPriority.High,
   });
 
   const updateTaskContent = (id: Id, title?: string, description?: string) => {
@@ -48,9 +50,7 @@ export function TaskCard({ task, deleteTask, index, column }: TaskCardProps) {
 
   return (
     <div
-      onMouseEnter={() => setMouseIsOver(true)}
-      onMouseLeave={() => setMouseIsOver(false)}
-      className="bg-card-bg p-4 rounded-lg w-full"
+      className={`bg-card-bg p-4 rounded-lg w-full ${isntOverlay && sortable.isDragging ? "opacity-50" : "opacity-100"}`}
       ref={sortable.ref}
     >
       {editMode ? (
@@ -80,11 +80,9 @@ export function TaskCard({ task, deleteTask, index, column }: TaskCardProps) {
         >
           <h3 className="text-black text-xs font-bold w-max">{task.priority}</h3>
         </div>
-        {mouseIsOver && (
-          <div className="absolute right-1 -top-17.5 -translate-y-1/2">
-            <DeleteButton onDelete={() => deleteTask(task.id)} />
-          </div>
-        )}
+        <div className="absolute right-1 -top-17.5 -translate-y-1/2">
+          <DeleteButton onDelete={() => deleteTask(task.id)} />
+        </div>
       </div>
     </div>
   );
