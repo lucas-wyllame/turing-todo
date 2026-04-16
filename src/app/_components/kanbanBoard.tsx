@@ -4,16 +4,12 @@ import { Column, Id, Task } from "@/types";
 import { PlusCircleIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { ColumnContainer } from "./columnContainer";
-import { DropProps } from "./context";
-import { DragDropManager, DragDropProvider, DragOverlay } from "@dnd-kit/react";
-import { createPortal } from "react-dom";
-import { useTasksContext } from "@/context/tasksContext";
+import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
 
 export function KanbanBoard() {
   const [columns, setColumns] = useState<Column[]>([]);
   const [isDropped, setIsDropped] = useState(false);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
-  const { tasks, setTasks } = useTasksContext();
 
   function createNewColumn() {
     const newColumn: Column = {
@@ -38,20 +34,6 @@ export function KanbanBoard() {
       return col;
     });
     setColumns(newColumns);
-  }
-
-  function createTask(task: Omit<Task, "id">) {
-    const newTask: Task = {
-      id: Date.now(),
-      ...task,
-    };
-
-    setTasks([...tasks, newTask]);
-  }
-
-  function deleteTask(id: Id) {
-    const filteredTasks = tasks.filter((task) => task.id !== id);
-    setTasks(filteredTasks);
   }
 
   console.log(columns);
@@ -106,9 +88,7 @@ export function KanbanBoard() {
                 column={column}
                 index={index}
                 updateColumnTitle={updateColumnTitle}
-                onCreateTask={createTask}
-                deleteTask={deleteTask}
-                tasks={tasks.filter((task) => task.columnId === column.id)}
+                columnsLength={columns.length}
               />
             );
           })}
@@ -118,10 +98,8 @@ export function KanbanBoard() {
                 isDropped={isDropped}
                 deleteColumn={deleteColumn}
                 column={activeColumn}
-                onCreateTask={createTask}
-                deleteTask={deleteTask}
                 index={0}
-                tasks={tasks.filter((task) => task.columnId === activeColumn.id)}
+                columnsLength={columns.length}
               />
             )}
           </DragOverlay>

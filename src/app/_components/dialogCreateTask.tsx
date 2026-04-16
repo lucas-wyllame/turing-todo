@@ -10,26 +10,25 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { PriorityButton } from "./PriorityButton";
 import { Id, Task } from "@/types";
 import dayjs from "dayjs";
+import { useTasksContext } from "@/context/tasksContext";
 
-type DialogCreateCardProps = {
+type DialogCreateTaskCardProps = {
   children: React.ReactNode;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleOpen: () => void;
   handleClose: () => void;
   columnId: Id;
-  onCreateTask: (task: Omit<Task, "id">) => void;
 };
 
-export default function DialogCreateCard({
+export default function DialogCreateTaskCard({
   children,
   handleOpen,
   handleClose,
   open,
   setOpen,
   columnId,
-  onCreateTask,
-}: DialogCreateCardProps) {
+}: DialogCreateTaskCardProps) {
   const [formData, setFormData] = useState<Omit<Task, "id">>({
     title: "",
     description: "",
@@ -38,11 +37,21 @@ export default function DialogCreateCard({
     columnId,
   });
   const [selectedPriority, setSelectedPriority] = useState<Task["priority"]>("ALTA");
+  const { tasks, setTasks } = useTasksContext();
+
+  function createTask(task: Omit<Task, "id">) {
+    const newTask: Task = {
+      id: Date.now(),
+      ...task,
+    };
+
+    setTasks([...tasks, newTask]);
+  }
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    onCreateTask({
+    createTask({
       ...formData,
       columnId,
     });
@@ -70,11 +79,11 @@ export default function DialogCreateCard({
         onClose={handleClose}
         slotProps={{
           paper: {
-            className: "!bg-card-bg !h-[530px] !w-[375px] !p-6 !m-[22px]",
+            className: "!bg-card-bg [&_*]:!text-white !h-[530px] !w-[375px] !p-6 !m-[22px]",
           },
         }}
       >
-        <h1 className="text-[26px] font-semibold mb-4 font-poppins text-ui-text">Novo Card</h1>
+        <h1 className="text-[26px] font-semibold mb-4 font-poppins text-ui-text">Novo TaskCard</h1>
         <DialogContent className="p-0!">
           <form onSubmit={handleSubmit} id="task-form" className="h-auto flex flex-col gap-4">
             <CustomTextField
@@ -109,7 +118,6 @@ export default function DialogCreateCard({
               <div className="flex gap-4">
                 <PriorityButton
                   label="ALTA"
-                  btnColor="priority-bgRed"
                   onClick={() => {
                     setFormData({ ...formData, priority: "ALTA" });
                     setSelectedPriority("ALTA");
@@ -118,7 +126,6 @@ export default function DialogCreateCard({
                 />
                 <PriorityButton
                   label="MÉDIA"
-                  btnColor="priority-bgYellow"
                   onClick={() => {
                     setFormData({ ...formData, priority: "MÉDIA" });
                     setSelectedPriority("MÉDIA");
@@ -127,7 +134,6 @@ export default function DialogCreateCard({
                 />
                 <PriorityButton
                   label="BAIXA"
-                  btnColor="priority-bgGreen"
                   onClick={() => {
                     setFormData({ ...formData, priority: "BAIXA" });
                     setSelectedPriority("BAIXA");
