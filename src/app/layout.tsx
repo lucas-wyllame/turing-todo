@@ -1,15 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
+import { StyledEngineProvider } from "@mui/material";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const geistPoppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: "600",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const geistDM_Sans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: "500",
 });
 
 export const metadata: Metadata = {
@@ -23,8 +27,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable}`}>
-      <body>{children}</body>
+    <html lang="en" suppressHydrationWarning className={`${geistDM_Sans.variable} ${geistPoppins.variable}`}>
+      <body>
+        <StyledEngineProvider injectFirst>
+          <AppRouterCacheProvider options={{ enableCssLayer: true }}>{children}</AppRouterCacheProvider>
+        </StyledEngineProvider>
+      </body>
     </html>
   );
 }
