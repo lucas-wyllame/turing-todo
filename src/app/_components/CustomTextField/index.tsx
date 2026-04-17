@@ -6,14 +6,23 @@ type CustomTextFieldProps = {
   multiline?: boolean;
   rows?: number;
   value: string;
+  required?: boolean;
   onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 } & TextFieldProps;
 
-export function CustomTextField({ label, height, multiline = false, rows = 1, value, onChange }: CustomTextFieldProps) {
+export function CustomTextField({
+  label,
+  height,
+  multiline = false,
+  rows = 1,
+  value,
+  required = false,
+  onChange,
+}: CustomTextFieldProps) {
   return (
     <TextField
       autoFocus
-      required
+      required={required}
       margin="dense"
       name="taskTitle"
       label={label}

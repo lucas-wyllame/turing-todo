@@ -88,9 +88,10 @@ export default function DialogCreateTaskCard({
               label="Título da Tarefa"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              required
             />
             <CustomTextField
-              value={formData.description}
+              value={formData.description ?? ""}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               multiline
               rows={3}

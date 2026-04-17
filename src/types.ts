@@ -10,7 +10,7 @@ export type Task = {
   id: Id;
   columnId: Id;
   title: string;
-  description: string;
+  description?: string;
   date: string;
   priority: Priority;
 };
