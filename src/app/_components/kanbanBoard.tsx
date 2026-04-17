@@ -43,8 +43,6 @@ export function KanbanBoard() {
     setColumns(newColumns);
   }
 
-  console.log(columns);
-
   function moveTask(sourceId: Id, targetId: Id) {
     setTasks((prev) => {
       const sourceIndex = prev.findIndex((task) => task.id === sourceId);
@@ -79,12 +77,9 @@ export function KanbanBoard() {
     nativeEvent?: Event;
   }) {
     const { operation } = event;
-    console.log(`Started dragging ${operation.source?.id}`);
-    console.log("Source data:  start", event.operation.source?.data);
 
-    if (event.operation.source?.data.type === "task") {
+    if (operation.source?.data.type === "task") {
       setActiveTask(event.operation.source?.data.task);
-      console.log("activeTask", activeTask);
 
       return;
     }

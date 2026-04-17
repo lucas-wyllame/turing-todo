@@ -70,8 +70,6 @@ export function TaskCard({ task, deleteTask, index, column, isntOverlay = false,
     return diffDays;
   }
 
-  console.log(getDaysRemaining(task.date));
-
   return (
     <div
       className={`relative bg-card-bg p-4 rounded-lg w-full ${isntOverlay && sortable.isDragging ? "opacity-50" : "opacity-100"}`}
@@ -140,7 +138,6 @@ export function TaskCard({ task, deleteTask, index, column, isntOverlay = false,
                 onClick={() => {
                   if (selectedTask) {
                     moveTaskToColumn(selectedTask.id, col.id);
-                    console.log("Moving task", selectedTask!.id, "to column", col.id);
                     setOpen(false);
                   }
                 }}

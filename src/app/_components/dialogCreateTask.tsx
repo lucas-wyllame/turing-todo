@@ -65,11 +65,8 @@ export default function DialogCreateTaskCard({
     });
     setSelectedPriority("ALTA");
 
-    console.log("FormData:", formData);
     handleClose();
   };
-
-  console.log("Selected Priority:", selectedPriority);
 
   return (
     <React.Fragment>
