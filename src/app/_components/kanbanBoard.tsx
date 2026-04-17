@@ -5,19 +5,19 @@ import { PlusCircleIcon } from "@phosphor-icons/react";
 import { useState } from "react";
 import { ColumnContainer } from "./columnContainer";
 import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
-import { useTasksContext } from "@/context/tasksContext";
 import { isSortable } from "@dnd-kit/react/sortable";
 import { DragOperation, Data } from "@dnd-kit/abstract";
 import { Draggable, Droppable } from "@dnd-kit/dom";
 import { TaskCard } from "./taskCard";
 import { defaultColumns } from "@/exampleCards";
+import { useKanBanContext } from "@/context/kanBanContext";
 
 export function KanbanBoard() {
-  const [columns, setColumns] = useState<Column[]>(defaultColumns);
+  // const [columns, setColumns] = useState<Column[]>(defaultColumns);
   const [isDropped, setIsDropped] = useState(false);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
   const [activeTask, setActiveTask] = useState<Task | null>(null);
-  const { tasks, setTasks } = useTasksContext();
+  const { tasks, setTasks, columns, setColumns } = useKanBanContext();
   const [columnOrder, setColumnOrder] = useState(() => Object.keys(tasks));
 
   function createNewColumn() {
@@ -76,6 +76,32 @@ export function KanbanBoard() {
   function moveTaskToColumn(taskId: Id, columnId: Id) {
     setTasks((prev) => prev.map((task) => (task.id === taskId ? { ...task, columnId } : task)));
   }
+
+  // const addItemToSection = (id: number, buttonName?: string) => {
+  //   setTasks((prev) => {
+  //     const mTasks = prev.map((card) => {
+  //       if (card.id === id) {
+  //         return {
+  //           ...card,
+  //           status:
+  //             sizeScreen < 1024
+  //               ? buttonName === "todo"
+  //                 ? "todo"
+  //                 : buttonName === "toDoing"
+  //                   ? "toDoing"
+  //                   : buttonName === "qA"
+  //                     ? "qA"
+  //                     : buttonName === "done"
+  //                       ? "done"
+  //                       : status
+  //               : status,
+  //         };
+  //       }
+  //       return card;
+  //     });
+  //     return mTasks;
+  //   });
+  // };
 
   return (
     <>
@@ -136,6 +162,7 @@ export function KanbanBoard() {
                 index={index}
                 updateColumnTitle={updateColumnTitle}
                 columnsLength={columns.length}
+                moveTaskToColumn={moveTaskToColumn}
               />
             );
           })}
@@ -147,6 +174,7 @@ export function KanbanBoard() {
                 column={activeColumn}
                 index={0}
                 columnsLength={columns.length}
+                moveTaskToColumn={moveTaskToColumn}
               />
             )}
             {activeTask && (
@@ -156,6 +184,7 @@ export function KanbanBoard() {
                 index={0}
                 column={{ id: activeTask.columnId, title: "" }}
                 isntOverlay={false}
+                moveTaskToColumn={moveTaskToColumn}
               />
             )}
           </DragOverlay>

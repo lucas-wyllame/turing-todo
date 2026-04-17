@@ -13,7 +13,7 @@ export const defaultTasks = [
     title: "Testar Navegadores",
     description: "Verificar compatibilidade em diferentes navegadores.",
     columnId: "todo",
-    date: "2023-11-25",
+    date: "16/04/2025",
     priority: "ALTA",
   },
   {
@@ -21,7 +21,7 @@ export const defaultTasks = [
     title: "Atualizar Bibliotecas",
     description: "Manter libs atualizadas por segurança.",
     columnId: "todo",
-    date: "2023-12-25",
+    date: "25/04/2026",
     priority: "BAIXA",
   },
   {
@@ -29,7 +29,7 @@ export const defaultTasks = [
     title: "Implementar Animações",
     description: "Melhorar UX com transições.",
     columnId: "todo",
-    date: "2023-12-25",
+    date: "25/04/2026",
     priority: "MÉDIA",
   },
   {
@@ -37,7 +37,7 @@ export const defaultTasks = [
     title: "Refatorar Componentes",
     description: "Melhorar organização do código.",
     columnId: "doing",
-    date: "2023-12-10",
+    date: "10/04/2026",
     priority: "MÉDIA",
   },
   {
@@ -45,7 +45,7 @@ export const defaultTasks = [
     title: "Testes QA",
     description: "Validar funcionalidades principais.",
     columnId: "qa",
-    date: "2023-12-15",
+    date: "15/04/2026",
     priority: "ALTA",
   },
   {
@@ -53,7 +53,7 @@ export const defaultTasks = [
     title: "Deploy Final",
     description: "Publicar versão final.",
     columnId: "done",
-    date: "2023-12-25",
+    date: "25/08/2026",
     priority: "BAIXA",
   },
 ];

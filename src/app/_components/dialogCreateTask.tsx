@@ -10,7 +10,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { PriorityButton } from "./PriorityButton";
 import { Id, Task } from "@/types";
 import dayjs from "dayjs";
-import { useTasksContext } from "@/context/tasksContext";
+import { useKanBanContext } from "@/context/kanBanContext";
 
 type DialogCreateTaskCardProps = {
   children: React.ReactNode;
@@ -37,7 +37,7 @@ export default function DialogCreateTaskCard({
     columnId,
   });
   const [selectedPriority, setSelectedPriority] = useState<Task["priority"]>("ALTA");
-  const { tasks, setTasks } = useTasksContext();
+  const { tasks, setTasks } = useKanBanContext();
 
   function createTask(task: Omit<Task, "id">) {
     const newTask: Task = {

@@ -1,13 +1,14 @@
 "use client";
 
 import { Column, Id, Task } from "@/types";
-import { ClockIcon, TrashIcon } from "@phosphor-icons/react";
+import { ClockIcon, DotsSixIcon, DotsThreeIcon, TrashIcon } from "@phosphor-icons/react";
 import DialogCreateTaskCard from "./dialogCreateTask";
 import { DeleteButton } from "./DeleteButton";
 import { useState } from "react";
-import { useTasksContext } from "@/context/tasksContext";
 import { useSortable } from "@dnd-kit/react/sortable";
 import { CollisionPriority } from "@dnd-kit/abstract";
+import { Drawer } from "@mui/material";
+import { useKanBanContext } from "@/context/kanBanContext";
 
 type TaskCardProps = {
   task: Task;
@@ -15,11 +16,14 @@ type TaskCardProps = {
   index: number;
   column: Column;
   isntOverlay?: boolean;
+  moveTaskToColumn: (taskId: Id, columnId: Id) => void;
 };
 
-export function TaskCard({ task, deleteTask, index, column, isntOverlay = false }: TaskCardProps) {
+export function TaskCard({ task, deleteTask, index, column, isntOverlay = false, moveTaskToColumn }: TaskCardProps) {
   const [editMode, setEditMode] = useState(false);
-  const { tasks, setTasks } = useTasksContext();
+  const { tasks, setTasks, columns } = useKanBanContext();
+  const [open, setOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   const priorityColors = {
     ALTA: "priority-bgRed",
@@ -48,11 +52,32 @@ export function TaskCard({ task, deleteTask, index, column, isntOverlay = false 
     setTasks(newTasks);
   };
 
+  function parseBRDate(dateString: string) {
+    const [day, month, year] = dateString.split("/").map(Number);
+    return new Date(year, month - 1, day);
+  }
+
+  function getDaysRemaining(date: string) {
+    const today = new Date();
+    const dueDate = parseBRDate(date);
+
+    today.setHours(0, 0, 0, 0);
+    dueDate.setHours(0, 0, 0, 0);
+
+    const diffTime = dueDate.getTime() - today.getTime();
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays;
+  }
+
+  console.log(getDaysRemaining(task.date));
+
   return (
     <div
-      className={`bg-card-bg p-4 rounded-lg w-full ${isntOverlay && sortable.isDragging ? "opacity-50" : "opacity-100"}`}
+      className={`relative bg-card-bg p-4 rounded-lg w-full ${isntOverlay && sortable.isDragging ? "opacity-50" : "opacity-100"}`}
       ref={sortable.ref}
     >
+      {getDaysRemaining(task.date) < 5 && <div className="absolute left-0 top-0 h-full w-1 bg-red-500 rounded-l-lg" />}
       {editMode ? (
         <input
           value={task.title}
@@ -80,10 +105,38 @@ export function TaskCard({ task, deleteTask, index, column, isntOverlay = false 
         >
           <h3 className="text-black text-xs font-bold w-max">{task.priority}</h3>
         </div>
-        <div className="absolute right-1 -top-17.5 -translate-y-1/2">
-          <DeleteButton onDelete={() => deleteTask(task.id)} />
-        </div>
       </div>
+      <div className="flex gap-2 mt-4">
+        <DeleteButton onDelete={() => deleteTask(task.id)} />
+        <DotsSixIcon
+          className="cursor-pointer"
+          size={32}
+          onClick={() => {
+            setOpen(true);
+            setSelectedTask(task);
+          }}
+        />
+      </div>
+      <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
+        <div className="p-6 flex flex-col gap-4">
+          <h2>Mover para:</h2>
+
+          {columns.map((col) => (
+            <div
+              key={col.id}
+              onClick={() => {
+                if (selectedTask) {
+                  moveTaskToColumn(selectedTask.id, col.id);
+                  console.log("Moving task", selectedTask!.id, "to column", col.id);
+                  setOpen(false);
+                }
+              }}
+            >
+              {col.title}
+            </div>
+          ))}
+        </div>
+      </Drawer>
     </div>
   );
 }
