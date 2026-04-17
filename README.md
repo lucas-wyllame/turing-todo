@@ -1,7 +1,7 @@
 # KanbanTuring – Lista de Tarefas
 
 O KanbanTuring é um app WEB de listagens de tarefas num sistema de kanban, desenvolvida em Next.js com Typescript, tailwind, material-ui e dnd-kit/react, voltada para organização de task.
-O sistema permite a movimentação e reodernação de tasks entre colunas, criação de novas colunas e tasks, as taks tem propriedas para informar titulo, descrição, prioridade e data. Este README documenta arquitetura, setup local com Docker, variáveis de ambiente, autenticação unificada, endpoints (com cURLs), dashboards, exportação, pipeline e um roteiro de testes manuais, além de troubleshooting.
+O sistema permite a movimentação e reodernação de tasks entre colunas, criação de novas colunas e tasks, as taks tem propriedas para informar titulo, descrição, prioridade e data. Este README documenta dependencias, estrura do projeto, configuração e deploy(local e vercel) e modelos principais
 
 ---
 
