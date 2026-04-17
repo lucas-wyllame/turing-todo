@@ -15,7 +15,6 @@ export function CustomTextField({ label, height, multiline = false, rows = 1, va
       autoFocus
       required
       margin="dense"
-      // id="name"
       name="taskTitle"
       label={label}
       type="text"
@@ -23,7 +22,6 @@ export function CustomTextField({ label, height, multiline = false, rows = 1, va
       variant="outlined"
       rows={rows}
       multiline={multiline}
-      // className="mt-2 mb-1"
       value={value}
       onChange={onChange}
       slotProps={{

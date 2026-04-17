@@ -117,24 +117,37 @@ export function TaskCard({ task, deleteTask, index, column, isntOverlay = false,
           }}
         />
       </div>
-      <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
+      <Drawer
+        anchor="bottom"
+        open={open}
+        onClose={() => setOpen(false)}
+        slotProps={{
+          root: {
+            className:
+              "[&_div]:bg-card-bg [&_*]:!text-white [&_div]:flex [&_div]:justify-center [&_div]:items-center [&_div]:w-full",
+          },
+        }}
+      >
         <div className="p-6 flex flex-col gap-4">
           <h2>Mover para:</h2>
 
-          {columns.map((col) => (
-            <div
-              key={col.id}
-              onClick={() => {
-                if (selectedTask) {
-                  moveTaskToColumn(selectedTask.id, col.id);
-                  console.log("Moving task", selectedTask!.id, "to column", col.id);
-                  setOpen(false);
-                }
-              }}
-            >
-              {col.title}
-            </div>
-          ))}
+          {columns
+            .filter((col) => col.id !== task.columnId)
+            .map((col) => (
+              <div
+                className="bg-main-bg! p-4 rounded-xl"
+                key={col.id}
+                onClick={() => {
+                  if (selectedTask) {
+                    moveTaskToColumn(selectedTask.id, col.id);
+                    console.log("Moving task", selectedTask!.id, "to column", col.id);
+                    setOpen(false);
+                  }
+                }}
+              >
+                {col.title}
+              </div>
+            ))}
         </div>
       </Drawer>
     </div>

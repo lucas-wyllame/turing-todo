@@ -31,20 +31,9 @@ export function ColumnContainer({
   columnsLength,
   moveTaskToColumn,
 }: ColumnContainerProps) {
-  // const { ref } = useDroppable({ id: column.id });
   const [editMode, setEditMode] = useState(false);
   const [open, setOpen] = useState(false);
   const { tasks, setTasks } = useKanBanContext();
-
-  // const sortable = useSortable({
-  //   id: column.id,
-  //   index,
-  //   data: {
-  //     type: "column",
-  //     column,
-  //   },
-  //   disabled: columnsLength === 1,
-  // });
 
   const droppable = useDroppable({
     id: column.id,
@@ -71,7 +60,6 @@ export function ColumnContainer({
   return (
     <>
       <div
-        // ref={sortable.ref}
         ref={droppable.ref}
         className={`w-75 flex flex-col justify-between bg-column-bg min-h-150 rounded-lg p-4 min-w-82.5 md:min-w-112.5 overflow-y-scroll`}
       >
