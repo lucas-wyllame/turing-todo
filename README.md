@@ -14,7 +14,7 @@ O sistema permite a movimentação e reodernação de tasks entre colunas, cria�
 
 ---
 
-## 2. Dependencias
+## 1. Dependencias
 
 | Componente | Versão (ref.) | Função |
 |-----------|----------------|--------|
